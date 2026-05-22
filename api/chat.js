@@ -35,6 +35,13 @@ export default async function handler(req, res) {
       body: JSON.stringify(req.body),
     });
 
+    if (!upstream.ok) {
+      const errText = await upstream.text();
+      let errMsg = errText;
+      try { errMsg = JSON.parse(errText)?.error?.message || errText; } catch {}
+      return res.status(upstream.status).json({ error: errMsg });
+    }
+
     // Stream the response back
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
