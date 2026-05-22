@@ -26,6 +26,9 @@ export async function callClaude(messages, systemPrompt, onChunk) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+    // Anthropic SSE: each event is a "data: <json>\n\n" line.
+    // We accumulate `full` on every delta so onChunk always receives the
+    // complete text so far, not just the latest fragment.
     for (const line of decoder.decode(value).split("\n")) {
       if (!line.startsWith("data:")) continue;
       const data = line.slice(5).trim();
@@ -40,6 +43,7 @@ export async function callClaude(messages, systemPrompt, onChunk) {
     }
   }
 
+  // Fallback: stream ended without [DONE] (e.g. network cut). Return what we have.
   return full;
 }
 

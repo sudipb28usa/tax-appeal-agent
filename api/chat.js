@@ -35,6 +35,9 @@ export default async function handler(req, res) {
       body: JSON.stringify(req.body),
     });
 
+    // Without this check, Anthropic error bodies (e.g. invalid model, bad key) are
+    // forwarded with HTTP 200 and non-SSE JSON. The frontend's SSE parser finds no
+    // "data:" lines, returns an empty string, and the chat opens silently blank.
     if (!upstream.ok) {
       const errText = await upstream.text();
       let errMsg = errText;
@@ -42,6 +45,7 @@ export default async function handler(req, res) {
       return res.status(upstream.status).json({ error: errMsg });
     }
 
+    // stream:false is used by the connection-test ping; everything else streams SSE.
     const isStream = req.body?.stream !== false;
 
     if (!isStream) {

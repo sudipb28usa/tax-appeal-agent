@@ -22,6 +22,8 @@ export function useChat({ hasSupporting }) {
     setStreamText("");
 
     try {
+      // Claude's API requires message content to be a string in multi-turn history.
+      // The first assistant turn holds a content array (document objects); flatten it.
       const apiMsgs = history.map((m) => ({
         role: m.role,
         content: typeof m.content === "string" ? m.content : "Documents uploaded + initial request",

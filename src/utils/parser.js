@@ -7,14 +7,28 @@ function extractTag(text, tag) {
 }
 
 function stripStructuredTags(text) {
-  return text.replace(STRUCTURED_TAG_PATTERN, "").trim();
+  return text
+    .replace(STRUCTURED_TAG_PATTERN, "")
+    // Also strip any --- json {...} / --- json [...] blocks Claude may emit
+    // instead of the expected XML tags.
+    .replace(/---\s*json\s*[\[{][\s\S]*?[\]}]/g, "")
+    .trim();
 }
 
 function extractHTML(text) {
-  return stripStructuredTags(text)
+  // Strip structured tags first so they don't appear inside the rendered form,
+  // then remove any markdown code fences Claude occasionally wraps the HTML in.
+  const stripped = stripStructuredTags(text)
     .replace(/```html?/gi, "")
     .replace(/```/g, "")
     .trim();
+
+  // Skip any narrative preamble and find where actual block-level HTML starts.
+  // If no HTML is found, return "" so the caller routes to chat mode instead
+  // of rendering raw text through dangerouslySetInnerHTML.
+  const htmlStart = stripped.search(/<(div|table|html)\b/i);
+  if (htmlStart === -1) return "";
+  return stripped.slice(htmlStart).trim();
 }
 
 export function parseReply(reply) {

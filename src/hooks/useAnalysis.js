@@ -79,6 +79,7 @@ export function useAnalysis({ files, zillow, damages, hasSupporting }) {
 
     const content = await buildContent();
     const systemPrompt = hasSupporting ? SYSTEM_DOCS : SYSTEM_NO_DOCS;
+    // Analysis doesn't stream text visually (the progress bar is the UI); pass a no-op onChunk.
     const reply = await callClaude([{ role: "user", content }], systemPrompt, () => {});
 
     stopProgress();

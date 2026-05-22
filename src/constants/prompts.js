@@ -7,6 +7,7 @@ WORKFLOW:
 4. Output the filled form when ready.
 
 OUTPUT FORMAT (when ready):
+IMPORTANT: Output ONLY the blocks below — no narrative, no preamble, no explanatory text before or between them.
 <FORM_DATA>{json}</FORM_DATA>
 <NEXT_ACTIONS>[array]</NEXT_ACTIONS>
 Then full 3-page HTML Form 130.
@@ -53,6 +54,7 @@ JURISDICTION RESEARCH — provide for the identified state/county:
 - Local tips specific to that county
 
 OUTPUT FORMAT (when ready):
+IMPORTANT: Output ONLY the blocks below — no narrative, no preamble, no explanatory text before or between them.
 <FORM_DATA>{json with same fields as above plus has_supporting_docs:false}</FORM_DATA>
 <PROCESS_INFO>{
   "state":"","county":"",
