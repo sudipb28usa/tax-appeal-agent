@@ -109,6 +109,11 @@ export function UploadPage({
         <p style={{ color: "#334155", fontSize: 11, textAlign: "center", marginTop: 8 }}>
           Without process docs: agent auto-detects your county &amp; researches the full appeal procedure
         </p>
+
+        {/* ── Footer ── */}
+        <p style={{ color: "#1e293b", fontSize: 11, textAlign: "center", marginTop: 28 }}>
+          Created by <span style={{ color: "#475569", fontWeight: 600 }}>Sudip Biswas</span>
+        </p>
       </div>
     </div>
   );

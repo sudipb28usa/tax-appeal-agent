@@ -105,6 +105,10 @@ export function ChatPage({
         </div>
       </footer>
 
+      <div style={{ textAlign: "center", padding: "4px 0 8px", color: "#1e293b", fontSize: 11 }}>
+        Created by <span style={{ color: "#334155", fontWeight: 600 }}>Sudip Biswas</span>
+      </div>
+
       <style>{`@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}`}</style>
     </div>
   );

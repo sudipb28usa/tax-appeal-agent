@@ -108,6 +108,11 @@ export function FormPage({
         )}
       </main>
 
+      {/* ── Footer ── */}
+      <footer className="no-print" style={{ textAlign: "center", padding: "12px 0 20px", color: "#94a3b8", fontSize: 11 }}>
+        Created by <span style={{ color: "#cbd5e1", fontWeight: 600 }}>Sudip Biswas</span>
+      </footer>
+
       <style>{`@media print{header,aside,.no-print{display:none!important}body{background:white!important}main{display:block!important;padding:0!important}}`}</style>
     </div>
   );
