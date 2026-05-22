@@ -12,27 +12,24 @@ IMPORTANT: Output ONLY the blocks below — no narrative, no preamble, no explan
 <NEXT_ACTIONS>[array]</NEXT_ACTIONS>
 Then full 3-page HTML Form 130.
 
-FORM_DATA fields:
+FORM_DATA fields (include ALL that apply):
 {"county":"","township":"","state":"","parcel":"","property_address":"","legal_description":"",
 "owner_name":"","phone":"","mailing_address":"","email":"",
-"current_land":"","current_improvements":"","current_total":"",
+"assessment_year":"",
+"previous_land_av":"","previous_improvements_av":"","previous_total_av":"",
+"new_land_av":"","new_improvements_av":"","new_total_av":"",
+"increase_amount":"","increase_pct":"",
 "requested_land":"","requested_improvements":"","requested_total":"",
-"assessment_year":"","damages":[],"zillow_url":"","date":"",
+"written_reasons":"","damages":[],"zillow_url":"","date":"",
 "deadline":"","assessor_name":"","assessor_address":"","assessor_phone":"",
 "burden_of_proof":true,"supporting_docs_summary":"","has_supporting_docs":true}
 
 NEXT_ACTIONS: array of {step,status("done|current|upcoming"),icon,title,description,deadline,tip}
 Steps: 1=File Form(current), 2=Informal Meeting, 3=Gather Evidence(mention docs), 4=Board Hearing, 5=State Board Appeal, 6=Tax Court
 
-FORM HTML rules:
-- Exact Form 130 structure, 3 pages, inline styles only
-- border:1px solid #999; border-collapse:collapse; width:100%
-- Section headers: background:#e8e8e8; font-weight:bold; text-align:center; padding:6px
-- Cell labels: font-size:10px; color:#555; font-style:italic; padding:3px 8px 1px
-- Cell values: font-size:12px; font-weight:500; color:#000; padding:2px 8px 6px
-- Reasons text box: font-size:8.5pt; line-height:1.45; fit ALL damage points (1-2 lines each)
-- Use persuasive language: mention material defect, mandatory disclosure where applicable
-- Page breaks: <div style="page-break-after:always;margin-bottom:40px"></div>`;
+WRITTEN_REASONS: In the "written_reasons" field write 3–6 persuasive paragraphs using the damages list.
+Mention material defect, deferred maintenance, and that mandatory disclosure applies where relevant.
+Reference comparable sales if a Zillow URL was provided. Each damage item should be 1–2 sentences.`;
 
 export const SYSTEM_NO_DOCS = `You are a property tax appeal specialist. Help homeowners complete their property tax appeal.
 
@@ -66,7 +63,7 @@ IMPORTANT: Output ONLY the blocks below — no narrative, no preamble, no explan
   "local_tips":[]
 }</PROCESS_INFO>
 <NEXT_ACTIONS>[array of {step,status,icon,title,description,deadline,tip,statute,office_name,office_phone}]</NEXT_ACTIONS>
-Then full HTML appeal form (3 pages, exact Form 130 layout if Indiana, equivalent for other states).
 
 NEXT_ACTIONS must use real office names, real statutes, real deadlines for that specific county.
-FORM HTML same rules as above.`;
+FORM_DATA must use the same fields as SYSTEM_DOCS above (with has_supporting_docs:false).
+WRITTEN_REASONS: same rules as SYSTEM_DOCS — persuasive paragraphs, one per damage item.`;

@@ -1,5 +1,6 @@
 import { JurisdictionCard } from "../components/JurisdictionCard";
 import { NextActions } from "../components/NextActions";
+import { AppealForm } from "../components/AppealForm";
 
 const HEADER_BTN = {
   background: "rgba(255,255,255,.12)", border: "none", color: "#e0e7ff",
@@ -14,15 +15,19 @@ export function FormPage({
   formHTML, formData, nextActions, processInfo, supportingSummary, hasSupporting,
   onChat, onReset,
 }) {
-  const savings = formData?.current_total && formData?.requested_total
-    ? parseDollar(formData.current_total) - parseDollar(formData.requested_total)
+  // Handle both new field names (new_total_av) and old names (current_total)
+  const currentTotalStr  = formData?.new_total_av   || formData?.current_total;
+  const requestedTotalStr = formData?.requested_total;
+
+  const savings = currentTotalStr && requestedTotalStr
+    ? parseDollar(currentTotalStr) - parseDollar(requestedTotalStr)
     : null;
 
   const summaryItems = [
-    { label: "Current",     value: formData?.current_total   || "–", color: "#dc2626" },
-    { label: "Requested",   value: formData?.requested_total || "–", color: "#16a34a" },
-    { label: "Reduction",   value: savings != null ? `−$${savings.toLocaleString()}` : "–", color: "#2563eb" },
-    { label: "Deadline",    value: formData?.deadline || "–", color: "#d97706" },
+    { label: "Current AV",   value: currentTotalStr   || "–", color: "#dc2626" },
+    { label: "Requested AV", value: requestedTotalStr || "–", color: "#16a34a" },
+    { label: "Reduction",    value: savings != null ? `−$${savings.toLocaleString()}` : "–", color: "#2563eb" },
+    { label: "Deadline",     value: formData?.deadline || "–", color: "#d97706" },
     ...(processInfo ? [{ label: "Jurisdiction", value: `${processInfo.county} Co., ${processInfo.state}`, color: "#7c3aed" }] : []),
   ];
 
@@ -43,9 +48,8 @@ export function FormPage({
           </div>
         </div>
         <div style={{ display: "flex", gap: 6 }}>
-          <button onClick={() => window.print()} style={HEADER_BTN}>🖨 Print</button>
-          <button onClick={onChat}               style={HEADER_BTN}>💬 Chat</button>
-          <button onClick={onReset}              style={HEADER_BTN}>↩ Restart</button>
+          <button onClick={onChat}  style={HEADER_BTN}>💬 Chat</button>
+          <button onClick={onReset} style={HEADER_BTN}>↩ Restart</button>
         </div>
       </header>
 
@@ -76,9 +80,12 @@ export function FormPage({
 
         {/* Form */}
         <div style={{ background: "#fff", borderRadius: 12, padding: 28, boxShadow: "0 2px 20px rgba(0,0,0,.08)", border: "1px solid #e2e8f0", overflow: "auto" }}>
-          {formHTML
-            ? <div style={{ fontFamily: "Georgia,serif", fontSize: 13 }} dangerouslySetInnerHTML={{ __html: formHTML }} />
-            : <div style={{ textAlign: "center", color: "#94a3b8", padding: 40 }}>Generating form…</div>}
+          {formData
+            ? <AppealForm formData={formData} />
+            : formHTML
+              ? <div dangerouslySetInnerHTML={{ __html: formHTML }} />
+              : <div style={{ textAlign: "center", color: "#94a3b8", padding: 40 }}>Generating form…</div>
+          }
         </div>
 
         {/* Sidebar */}
@@ -101,7 +108,7 @@ export function FormPage({
         )}
       </main>
 
-      <style>{`@media print{button{display:none!important}body{background:white!important}}`}</style>
+      <style>{`@media print{header,aside,.no-print{display:none!important}body{background:white!important}main{display:block!important;padding:0!important}}`}</style>
     </div>
   );
 }
