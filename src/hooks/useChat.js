@@ -37,8 +37,10 @@ export function useChat({ hasSupporting }) {
       setStreamText("");
 
       const parsed = parseReply(reply);
-      const assistantContent =
-        parsed.html?.length > 300 ? "✅ Form 130 ready! See all 3 pages below." : parsed.clean;
+      const formReady = !!(parsed.formData?.county || parsed.formData?.parcel || parsed.html?.length > 300);
+      const assistantContent = formReady
+        ? "✅ All information collected. Your appeal form is ready — review it below."
+        : parsed.clean;
 
       setMessages((prev) => [...prev, { role: "assistant", content: assistantContent }]);
       return parsed;

@@ -22,6 +22,11 @@ export default function App() {
 
   // ── Orchestration ──────────────────────────────────────────────────────────
 
+  // Form is ready when Claude returned either filled formData OR an HTML form block.
+  // AppealForm renders from formData so HTML is no longer required.
+  const isFormReady = (parsed) =>
+    !!(parsed?.formData?.county || parsed?.formData?.parcel || parsed?.html?.length > 300);
+
   const startAgent = async () => {
     appState.setError("");
     appState.setPhase("analyzing");
@@ -31,10 +36,10 @@ export default function App() {
 
       const analysisUserMsg = { role: "user", content: "📎 Documents analyzed." };
 
-      if (parsed.html?.length > 300) {
+      if (isFormReady(parsed)) {
         chat.initMessages([
           analysisUserMsg,
-          { role: "assistant", content: "✅ All information extracted. Your Form 130 and personalized appeal roadmap are ready below." },
+          { role: "assistant", content: "✅ All information extracted. Your appeal form and personalized roadmap are ready below." },
         ]);
         appState.setPhase("form");
       } else {
@@ -58,7 +63,7 @@ export default function App() {
       if (parsed.formData || parsed.nextActions || parsed.processInfo || parsed.html?.length > 300) {
         appState.applyParsed(parsed);
       }
-      if (parsed.html?.length > 300) {
+      if (isFormReady(parsed)) {
         appState.setPhase("form");
       }
     } catch (e) {

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { Bubble } from "../components/Bubble";
 import { JurisdictionCard } from "../components/JurisdictionCard";
 import { NextActions } from "../components/NextActions";
@@ -22,15 +22,26 @@ export function ChatPage({
   onSend, onReset,
 }) {
   const chatEndRef = useRef();
+  const textareaRef = useRef();
 
   const scrollToBottom = () =>
     setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
 
+  // Auto-resize textarea as the user types; cap at 140px.
+  const handleChange = useCallback((e) => {
+    setInput(e.target.value);
+    const el = e.target;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 140) + "px";
+  }, [setInput]);
+
+  // Enter = send, Shift+Enter = newline.
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
   const handleSend = async () => {
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
     await onSend();
     scrollToBottom();
   };
@@ -72,13 +83,17 @@ export function ChatPage({
       {/* ── Input bar ── */}
       <footer style={{ padding: "10px 14px", background: "#0f172a", borderTop: "1px solid #1e293b", maxWidth: 720, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <input
+          <textarea
+            ref={textareaRef}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={handleChange}
             onKeyDown={handleKeyDown}
-            placeholder="Answer the agent's question…"
+            placeholder={"Answer the agent's question…\n(Shift+Enter for new line)"}
             disabled={loading}
-            style={{ flex: 1, padding: "10px 14px", borderRadius: 10, border: "1.5px solid #1e293b", background: "#0a0f1e", color: "#f1f5f9", fontSize: 13, outline: "none" }}
+            rows={1}
+            style={{ flex: 1, padding: "10px 14px", borderRadius: 10, border: "1.5px solid #1e293b",
+                     background: "#0a0f1e", color: "#f1f5f9", fontSize: 13, outline: "none",
+                     resize: "none", lineHeight: 1.5, fontFamily: "inherit", overflowY: "hidden" }}
           />
           <button
             onClick={handleSend}
