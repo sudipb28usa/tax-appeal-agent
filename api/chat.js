@@ -42,7 +42,17 @@ export default async function handler(req, res) {
       return res.status(upstream.status).json({ error: errMsg });
     }
 
-    // Stream the response back
+    const isStream = req.body?.stream !== false;
+
+    if (!isStream) {
+      // Non-streaming: forward JSON response directly
+      const json = await upstream.json();
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      return res.status(200).json(json);
+    }
+
+    // Streaming: forward SSE response back
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
