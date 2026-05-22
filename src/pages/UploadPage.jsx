@@ -113,6 +113,8 @@ export function UploadPage({
         {/* ── Footer ── */}
         <p style={{ color: "#1e293b", fontSize: 11, textAlign: "center", marginTop: 28 }}>
           Created by <span style={{ color: "#475569", fontWeight: 600 }}>Sudip Biswas</span>
+          <span style={{ margin: "0 6px" }}>·</span>
+          © {new Date().getFullYear()} Sudip Biswas. All rights reserved.
         </p>
       </div>
     </div>
