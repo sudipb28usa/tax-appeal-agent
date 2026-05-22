@@ -139,23 +139,64 @@ export function AppealForm({ formData: d }) {
 
         {/* ════════════════════════  PAGE 1  ════════════════════════ */}
 
-        {/* Title header */}
-        <table style={{ ...S.table, borderBottom: BORDER }}>
+        {/* ── Real Form 130 header — 3-column layout ── */}
+        <table style={{ ...S.table, border: "2px solid #000" }}>
           <tbody>
             <tr>
-              <td style={{ padding: "8px 14px", textAlign: "center",
-                           borderRight: BORDER, verticalAlign: "middle" }}>
-                <div style={{ fontSize: "15pt", fontWeight: "bold", letterSpacing: ".04em",
-                              textTransform: "uppercase" }}>
+              {/* Left: title + form number */}
+              <td style={{ padding: "8px 12px", textAlign: "center", verticalAlign: "middle",
+                           borderRight: BORDER }}>
+                <div style={{ fontSize: "15pt", fontWeight: "bold", lineHeight: 1.2,
+                              letterSpacing: ".02em" }}>
                   {formTitle}
                 </div>
-                <div style={{ fontSize: "8pt", marginTop: 3, color: "#333" }}>
-                  {stateAgency}
+                <div style={{ fontSize: "7.5pt", color: "#333", marginTop: 5,
+                              borderTop: "1px solid #aaa", paddingTop: 3 }}>
+                  {formNum && <>{formNum}&nbsp;|&nbsp;</>}{stateAgency}
                 </div>
               </td>
-              <td style={{ width: "17%", padding: "6px 10px", verticalAlign: "top",
-                           textAlign: "right", fontSize: "8pt", whiteSpace: "nowrap" }}>
-                {formNum && <div style={{ fontWeight: "bold" }}>{formNum}</div>}
+
+              {/* Middle: FOR OFFICE USE ONLY */}
+              <td style={{ width: "26%", borderRight: BORDER, verticalAlign: "top", padding: 0 }}>
+                <div style={{ ...S.hdr, borderTop: "none", borderLeft: "none",
+                              borderRight: "none", borderBottom: BORDER }}>
+                  FOR OFFICE USE ONLY
+                </div>
+                <span style={{ ...S.lbl, padding: "2px 8px 0" }}>
+                  Petition Number (Assigned by Local Office)
+                </span>
+                <div style={{ height: 40 }} />
+              </td>
+
+              {/* Right: FORM 130 + assessment year */}
+              <td style={{ width: "20%", verticalAlign: "top", padding: 0 }}>
+                <div style={{ fontWeight: "bold", fontSize: "16pt", textAlign: "center",
+                              padding: "4px 6px 3px", borderBottom: BORDER }}>
+                  FORM 130
+                </div>
+                <span style={{ ...S.lbl, padding: "2px 6px 0" }}>Assessment Year Under:</span>
+                <div style={{ fontWeight: "bold", fontSize: "11pt", textAlign: "center",
+                              padding: "3px 6px 6px" }}>
+                  JANUARY 1,&nbsp;{fmt(f.assessment_year) || new Date().getFullYear()}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* ── Real Form 130 instruction bullets ── */}
+        <table style={S.table}>
+          <tbody>
+            <tr>
+              <td style={{ ...S.cell, padding: "6px 14px", fontSize: "8pt", lineHeight: 1.75 }}>
+                <div>• A taxpayer may appeal an assessment by filing this form with the township assessor,
+                  or the county assessor if the township is not served by a township assessor.</div>
+                <div style={{ marginTop: 3 }}>
+                  • An appeal of the current year's real property assessment may have two different filing
+                  deadlines based on when the Form 11 notice is mailed. If mailed <em>before May 1</em>,
+                  the deadline is June 15 of the assessment year. If mailed <em>on or after May 1</em>,
+                  the deadline is <strong>{f.deadline || "June 15 of the assessment year"}</strong>.
+                </div>
               </td>
             </tr>
           </tbody>
